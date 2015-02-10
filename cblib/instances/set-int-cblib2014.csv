@@ -1,0 +1,7 @@
+PACK	INSTANCES
+estein	estein4_A, estein4_B, estein4_C, estein4_nr22, estein5_A, estein5_B, estein5_C, estein5_nr1, estein5_nr21
+portfoliocard	classical_50_1, classical_50_2, classical_50_3, classical_200_1, classical_200_2, classical_200_3, robust_50_1, robust_50_2, robust_50_3, robust_100_1, robust_100_2, robust_100_3, robust_200_1, robust_200_2, robust_200_3, shortfall_50_1, shortfall_50_2, shortfall_50_3, shortfall_100_1, shortfall_100_2, shortfall_100_3, shortfall_200_1, shortfall_200_2, shortfall_200_3
+pp	pp-n10-d10, pp-n10-d10000, pp-n100-d10, pp-n100-d10000, pp-n1000-d10, pp-n1000-d10000, pp-n100000-d10, pp-n100000-d10000
+sssd	sssd-strong-15-4, sssd-strong-15-8, sssd-strong-20-4, sssd-strong-20-8, sssd-strong-25-4, sssd-strong-25-8, sssd-strong-30-4, sssd-strong-30-8, sssd-weak-15-4, sssd-weak-15-8, sssd-weak-20-4, sssd-weak-20-8, sssd-weak-25-4, sssd-weak-25-8, sssd-weak-30-4, sssd-weak-30-8
+turbine	turbine07, turbine07_aniso, turbine54, turbine07GF, turbine54GF, turbine07_lowb, turbine07_lowb_aniso
+uflquad	uflquad-nopsc-10-100, uflquad-nopsc-10-150, uflquad-nopsc-20-100, uflquad-nopsc-20-150, uflquad-nopsc-30-100, uflquad-nopsc-30-150, uflquad-nopsc-30-200, uflquad-nopsc-30-300, uflquad-psc-10-100, uflquad-psc-10-150, uflquad-psc-20-100, uflquad-psc-20-150, uflquad-psc-30-100, uflquad-psc-30-150, uflquad-psc-30-200, uflquad-psc-30-300
