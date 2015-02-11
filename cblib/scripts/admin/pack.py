@@ -107,9 +107,9 @@ if __name__ == "__main__":
     print(str(e))
     raise Exception(''.join([
           'Incorrect usage, try all instances', '\n',
-          '  python ', sys.argv[0], ' cblib', '\n',
+          '  python ', sys.argv[0], ' -n cblib', '\n',
           'or try all mixed-integer second order cone instances:', '\n',
-          '  python ', sys.argv[0], ' cblib-misoco --filter="||int|| and ||cones|so|| and not ||psdcones||"']))
+          '  python ', sys.argv[0], ' -n cblib-misoco --filter="||int|| and ||cones|so|| and not ||psdcones||"']))
     sys.exit(2)
 
   packname = None
