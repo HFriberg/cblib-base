@@ -158,7 +158,7 @@ class htmltable:
       out += '<td><a href="download/' + str(pack) + '.tar.gz">' + str(pack) + '</a></td>'
       self.pack = pack
     else:
-      out += '<td></td>'
+      out += '<td>...' + str(pack) + '</td>'
     out += '<td><div style="width:320px;">' + text + '</div></td>'
     out += '<td>' + ', '.join(['<a href="ref.bib.html#' + r + '">' + r + '</a>' for r in refkeys.replace(" ","").split(',')]) + '</td>'
     out += '<td>' + contributor + '</td>'
