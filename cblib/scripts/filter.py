@@ -120,7 +120,7 @@ def filter(expr, printexpr, cbfset, printer):
 def csvformatprinter(cbfset, x):
   if csvformatprinter.pack != cbfset.getpack(x, cbfset.rootdir):
     csvformatprinter.pack = cbfset.getpack(x, cbfset.rootdir)
-    sys.stdout.write("\n" + csvformatprinter.pack + "\t")
+    sys.stdout.write("\n" + csvformatprinter.pack + ";")
   else:
     sys.stdout.write(", ")
   
@@ -168,7 +168,7 @@ if __name__ == "__main__":
   # Default print: Header
   if printexpr is None:
     printer = lambda x: csvformatprinter(cbfset, x)
-    sys.stdout.write("PACK\tINSTANCES")
+    sys.stdout.write("PACK;INSTANCES")
 
   try:
     filter(filtexpr, printexpr, cbfset, printer)
