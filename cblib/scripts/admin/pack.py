@@ -85,6 +85,7 @@ def pack(packname, filtexpr, setexpr, packall):
   
     # Find all other important files
     files.append(os.path.join(rootdir,'README'))
+    files.append(os.path.join(rootdir,'instances','cbf','README'))
 
   # Create compressed tar file
   print('Writing '+packname+'.tar.gz')
