@@ -34,6 +34,7 @@ if __name__ == "__main__":
 
 
 import os, sys, inspect, tarfile, glob, stat, getopt
+from data.CBFset import CBFset
 from filter import filter
 
 def addwritepermission(tarinfo):
@@ -57,7 +58,7 @@ def pack(packname, filtexpr, setexpr, packall):
 
   # Find all instances
   files = list()
-  CBFset cbfset()
+  cbfset = CBFset()
   cbfset.read(setexpr)
   filter(filtexpr, None, cbfset, lambda x: files.append(x))
 
