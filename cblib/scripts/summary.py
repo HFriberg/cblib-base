@@ -281,18 +281,12 @@ if __name__ == "__main__":
     else:
       cbfset = filter.defaultcbfset()
    
-    probfiles = cbfset.cbffiles
-    solfiles = cbfset.solfiles
-
     # Apply filter if any
     if filtexpr:
-      probfilter = list()
-      filter.filter("", ''.join(["bool(", filtexpr, ")"]), cbfset, lambda x: probfilter.append(x))
-      probfiles = [probfiles[i] for i in range(len(probfilter)) if probfilter[i]]
-      solfiles = [solfiles[i] for i in range(len(probfilter)) if probfilter[i]]
+      cbfset.filter(filtexpr)
 
     # Extract solution summaries
-    for (probfile, solfile) in zip(probfiles, solfiles):
+    for (probfile, solfile) in zip(cbfset.cbffiles, cbfset.solfiles):
       sys.stdout.write('\n' + solfile + '\n')
       summary(probfile, solfile, lambda x: sys.stdout.write(str(x)+'\n'))
 

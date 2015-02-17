@@ -36,7 +36,9 @@ class solver:
   def read(self, file, paramfile, cbfdata):
     self.cbfdata = cbfdata
     self.task = self.env.Task(0, 0)
-    self.task.set_Stream(mosek.streamtype.log, self.printer)
+
+    if self.printer:
+      self.task.set_Stream(mosek.streamtype.log, self.printer)
 
     if paramfile:
       self.task.putparam("MSK_SPAR_PARAM_READ_FILE_NAME", paramfile)
@@ -49,7 +51,9 @@ class solver:
 
   def optimize(self):
     self.task.optimize()
-    self.task.solutionsummary(mosek.streamtype.log)
+
+  def getsizeoftree(self):
+    return(self.task.getintinf(mosek.iinfitem.mio_num_branch))
 
   def getsolution(self):
     sol = CBFsolution()
@@ -146,3 +150,6 @@ class solver:
       for km in range(cbfdata.mapstackdim[k]):
         self.task.putbound(mosek.accmode.var, j, simplebound, 0.0, 0.0)
         j += 1
+
+  def report(self):
+    self.task.solutionsummary(mosek.streamtype.log)

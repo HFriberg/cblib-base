@@ -24,6 +24,7 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import os, csv, re
+import filter
 
 class CBFset:
   def getroot(self, setpath):
@@ -94,12 +95,11 @@ class CBFset:
             fext = os.path.splitext(fbase)[1] + fext
   
           if fext.lower() in ['.cbf','.cbf.gz']:
-            cbfpath = os.path.join(dirpath,filename)
+            cbfpath = os.path.realpath(os.path.abspath(os.path.join(dirpath,filename)))
             self.cbffiles.append(cbfpath)
             self.solfiles.append(os.path.join(os.path.realpath(os.path.abspath(self.setpath)) + '.sol', os.path.relpath(cbfpath,self.rootdir) + '.sol'))
 
   def readfilelist(self, filelist):
-
     # Unorganised list of files
     self.setpath = ""
     self.rootdir = ""
@@ -126,3 +126,9 @@ class CBFset:
           self.solfiles.append(cbfpath + '.sol')
         else:
           raise Exception(''.join(['Instance "', cbfpath, '" not found.']))
+
+  def filter(self, filtexpr):
+    cbffilter = list()
+    filter.filter("", ''.join(["bool(", filtexpr, ")"]), self, lambda x: cbffilter.append(x))
+    self.cbffiles = [self.cbffiles[i] for i in range(len(cbffilter)) if cbffilter[i]]
+    self.solfiles = [self.solfiles[i] for i in range(len(cbffilter)) if cbffilter[i]]    

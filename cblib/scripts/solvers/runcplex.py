@@ -44,8 +44,10 @@ class solver:
   def read(self, file, paramfile, cbfdata):
     self.cbfdata = cbfdata
     self.task = cplex.Cplex()
-    self.task.set_log_stream(self.printer)
-    self.task.set_results_stream(self.printer)
+
+    if self.printer:
+      self.task.set_log_stream(self.printer)
+      self.task.set_results_stream(self.printer)
 
     if paramfile:
       self.task.parameters.read_file(paramfile)
@@ -56,7 +58,10 @@ class solver:
       self.__read_through_pythonapi(cbfdata)
 
   def optimize(self):
-    return self.task.solve()
+    self.task.solve()
+
+  def getsizeoftree(self):
+    return(self.task.solution.progress.get_num_nodes_processed())
 
   def getsolution(self):
     sol = CBFsolution()
@@ -153,6 +158,5 @@ class solver:
 
 
   def report(self):
-    self.task.set_log_stream(sys.stdout)
     self.printer(str(self.task.solution.get_quality_metrics()));
     

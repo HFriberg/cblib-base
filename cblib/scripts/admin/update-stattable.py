@@ -191,17 +191,11 @@ if __name__ == "__main__":
   else:
     cbfset = filter.defaultcbfset()
 
-  probfiles = cbfset.cbffiles
-  solfiles = cbfset.solfiles
-
   # Apply filter if any
   if filtexpr:
-    probfilter = list()
-    filter.filter("", ''.join(["bool(", filtexpr, ")"]), cbfset, lambda x: probfilter.append(x))
-    probfiles = [probfiles[i] for i in range(len(probfilter)) if probfilter[i]]
-    solfiles = [solfiles[i] for i in range(len(probfilter)) if probfilter[i]]
+    cbfset.filter(filtexpr)
 
   try:
-    update_stattable(statfile, probfiles, solfiles)
+    update_stattable(statfile, cbfset.cbffiles, cbfset.solfiles)
   except Exception as e:
     print(str(e))
