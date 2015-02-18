@@ -36,6 +36,7 @@ if __name__ == "__main__":
 import os, inspect, getopt, csv
 from filter import filter, defaultcbfset
 from data.CBFset import CBFset
+from data.CBFrunstat import primobjstat_integer, primobjstat_continuous
 
 statdictnames = ['pack','name','psense','pcer','perr','pobj','dcer','derr','dobj','claim']
 
@@ -43,7 +44,7 @@ class textable:
   def __init__(self):
     self.pack = ''
     self.statdict = None
-    self.objstatmark = ['\\hphantom{\\tnote{a}}', '\\tnote{v}', '\\tnote{a}']
+    self.objstatmark = {'': '\\hphantom{\\tnote{a}}', 'v': '\\tnote{v}', 'a': '\\tnote{a}'}
 
   def opentable(self):
     print('''\
@@ -113,11 +114,7 @@ class textable:
 
     # obj
     if data[0] in self.statdict:
-      if data[7] + data[9] == 0:
-        res = objstat_continuous(self.statdict[data[0]])
-      else:
-        res = objstat_integer(self.statdict[data[0]])
-
+      res = primobjstat(self.statdict[data[0]], data[7] + data[9] >= 1)      
       column[10] = res[0].replace('E-','E$-$') + self.objstatmark[res[1]]
 
     print('\n & '.join(column))
@@ -127,7 +124,7 @@ class htmltable:
   def __init__(self):
     self.pack = ''
     self.statdict = None
-    self.objstatmark = ['<sup>&ensp;</sup>', '<sup>v</sup>', '<sup>a</sup>']
+    self.objstatmark = {'': '<sup>&ensp;</sup>', 'v': '<sup>v</sup>', 'a': '<sup>a</sup>'}
     self.withcss = True
     self.oddrow = True
 
@@ -274,12 +271,7 @@ class htmltable:
 
     # obj
     if data[0] in self.statdict:
-      if data[7] + data[9] == 0:
-        res = objstat_continuous(self.statdict[data[0]])
-      else:
-	res = objstat_integer(self.statdict[data[0]])
-
-      print(res)
+      res = primobjstat(self.statdict[data[0]], data[7] + data[9] >= 1)
       column[10] = res[0].replace('E-','E&minus;') + self.objstatmark[res[1]]
 
     out = ''
@@ -304,85 +296,34 @@ class htmltable:
     else:
       return('      <tr>' + value + '</tr>')
 
-def objstat_continuous(csvstat):
-  if csvstat['perr'] == '' or csvstat['derr'] == '':
-    return(('?', 0))
 
-  if csvstat['psense'].strip().upper() == 'MIN':
-    pGTd = 1.0
-  elif csvstat['psense'].strip().upper() == 'MAX':
-    pGTd = -1.0
+def primobjstat(csvstat, isinteger):
+  pfeas_obj = float('nan')
+  pfeas_err = float('inf')
+  pinfeas_err = float('inf')
+
+  dfeas_obj = float('nan')
+  dfeas_err = float('inf')
+  dinfeas_err = float('inf')
+
+  isminimize = (csvstat['psense'].strip().upper() == 'MIN')
+
+  if csvstat['pcer'] == 'FEASIBILITY':
+    pfeas_obj = float(csvstat['pobj'])
+    pfeas_err = float(csvstat['perr'])
+  elif csvstat['pcer'] == 'INFEASIBILITY':
+    pinfeas_err = float(csvstat['perr'])
+
+  if csvstat['dcer'] == 'FEASIBILITY':
+    dfeas_obj = float(csvstat['dobj'])
+    dfeas_err = float(csvstat['derr'])
+  elif csvstat['pcer'] == 'INFEASIBILITY':
+    dinfeas_err = float(csvstat['derr'])
+
+  if isinteger:
+    return primobjstat_integer(pfeas_obj, pfeas_err, pinfeas_err, dinfeas_err, csvstat['claim'])
   else:
-    return(('?', 0))
-
-  perr = float(csvstat['perr'])
-  pobj = float(csvstat['pobj'])
-  derr = float(csvstat['derr'])
-  dobj = float(csvstat['dobj'])
-
-  # OPTIMAL
-  if csvstat['pcer'] == 'FEASIBILITY' and csvstat['dcer'] == 'FEASIBILITY' and \
-     perr <= 1e-4 and derr <= 1e-4 and ( \
-       pGTd*(pobj - dobj) <= 1e-4 or \
-       pGTd*(pobj - dobj) / max(1, abs(pobj), abs(dobj)) <= 1e-7 \
-     ):
-    return(('{0:.4E}'.format(float(csvstat['pobj'])), 0))
-
-  # PRIMAL INFEASIBLE
-  if csvstat['pcer'] == 'INFEASIBILITY' and perr <= 1e-4:
-    return(('Primal infeasible', 0))
-
-  # DUAL INFEASIBLE
-  if derr <= 1e-4 and csvstat['dcer'] == 'INFEASIBILITY':
-    return(('Dual infeasible', 0))
-
-  # PRIMAL FEASIBLE
-  if csvstat['pcer'] == 'FEASIBILITY' and perr <= 1e-4:
-    return(('{0:.4E}'.format(float(csvstat['pobj'])), 1))
-
-  # BEST GUESS
-  if perr <= derr or csvstat['dcer'] == 'FEASIBILITY':
-    if csvstat['pcer'] == 'FEASIBILITY':
-      return(('{0:.4E}'.format(float(csvstat['pobj'])), 2))
-    else:
-      return(('Primal infeasible', 2))
-  else:
-    return(('Dual infeasible', 2))
-
-
-def objstat_integer(csvstat):
-  if csvstat['perr'] == '':
-    return(('?', 0))
-
-  perr = float(csvstat['perr'])
-
-  # OPTIMAL
-  if csvstat['pcer'] == 'FEASIBILITY' and perr <= 1e-4 and csvstat['claim'] == 'INTEGER_OPTIMALITY':
-    return(('{0:.4E}'.format(float(csvstat['pobj'])), 0))
-
-  # INFEASIBLE
-  if (csvstat['pcer'] == 'INFEASIBILITY' and perr <= 1e-4) or csvstat['claim'] == 'INTEGER_INFEASIBILITY':
-    return(('Infeasible', 0))
-
-  # UNBOUNDED IF INFEASIBLE
-  if not csvstat['derr'] == '':
-    derr = float(csvstat['derr'])
-
-    if derr <= 1e-4 and csvstat['dcer'] == 'INFEASIBILITY':
-      return(('Unbound if feasible', 0))
-
-  # FEASIBLE
-  if csvstat['pcer'] == 'FEASIBILITY' and perr <= 1e-4:
-    return(('{0:.4E}'.format(float(csvstat['pobj'])), 1))
-
-  # BEST GUESS
-  if csvstat['derr'] == '' or perr <= derr or csvstat['dcer'] == 'FEASIBILITY':
-    if csvstat['pcer'] == 'FEASIBILITY':
-      return(('{0:.4E}'.format(float(csvstat['pobj'])), 2))
-    else:
-      return(('Infeasible', 2))
-  else:
-    return(('Unbound if feasible', 2))
+    return primobjstat_continuous(pfeas_obj, pfeas_err, pinfeas_err, dfeas_obj, dfeas_err, dinfeas_err, isminimize)
 
 
 def stattable(out, statfile, filtexpr, cbfset):

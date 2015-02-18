@@ -37,6 +37,7 @@ import os, sys, inspect, getopt, time
 import filter
 from timeit import Timer
 from summary import summary
+from data.CBFrunstat import CBFrunstat
 from data.CBFdata import CBFdata
 from data.CBFset import CBFset
 
@@ -76,7 +77,7 @@ def run(solver, probfile, solfile, paramfile, printer, callback):
         summary(pp, ppsol, printer)
 
       if callback:
-        callback({'prob':pp, 'iter':i, 'solver':solver, 'sol':ppsol, 'soltime':pptime})
+        callback(CBFrunstat(pp, i, solver, ppsol, pptime))
 
       timebefore = time.time()
 
@@ -85,9 +86,11 @@ def run(solver, probfile, solfile, paramfile, printer, callback):
       ss.close()
 
 
-def benchmark_callback(pack, res):
-  status = "UNKNOWN"
-  sys.stdout.write(';'.join([pack, res['prob'].name, str(res['iter']), status, '{0:.4E}'.format(res['soltime']), str(res['solver'].getsizeoftree())]) + '\n')
+def benchmark_callback(pack, rs):  
+  primobjstat = rs.primobjstatus()
+  if primobjstat[1]:
+    primobjstat[1] = '(' + primobjstat[1] + ')'
+  sys.stdout.write(';'.join([pack, rs.problem.name, str(rs.id), ''.join(primobjstat), '{0:.4E}'.format(rs.soltime), str(rs.solver.getsizeoftree())]) + '\n')
   
 
 
@@ -129,14 +132,17 @@ if __name__ == "__main__":
   try:
     # Setup output formatting
     if benchmark:
-      sys.stdout.write(';'.join(['PACK','NAME','ID','STATUS','TIME','TREE SIZE']) + '\n')
       rawprinter = None
-      printer  = None
-      callback = lambda x: benchmark_callback(cbfset.getpack(x['prob'].file, cbfset.rootdir), x)
+      printer    = None
+      callback   = lambda rs: benchmark_callback(cbfset.getpack(rs.problem.file, cbfset.rootdir), rs)
+
+      # Default print: header
+      sys.stdout.write(';'.join(['PACK','NAME','ID','STATUS','TIME','TREE SIZE']) + '\n')
+      
     else:
       rawprinter = sys.stdout.write
       printer    = lambda x: rawprinter(str(x) + '\n')
-      callback = None
+      callback   = None
       
     # Load solver
     solver = __import__('solvers.' + sys.argv[1], fromlist=sys.argv[1]).solver(rawprinter)
