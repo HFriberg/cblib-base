@@ -34,8 +34,7 @@ if __name__ == "__main__":
 
 
 import os, sys, inspect, re, getopt
-from data.CBFdata import CBFdata
-from data.CBFset import CBFset
+import data.CBFdata, data.CBFset
 
 
 def defaultcbfset():
@@ -45,7 +44,7 @@ def defaultcbfset():
   rootdir   = os.path.join(scriptdir,'..')
   
   if os.path.exists(os.path.join(rootdir,'instances','cbf')):
-    cbfset = CBFset()
+    cbfset = data.CBFset.CBFset()
     cbfset.read(os.path.join(rootdir,'instances','cbf'))
     return(cbfset)
   else:
@@ -108,7 +107,7 @@ def filter(expr, printexpr, cbfset, printer):
   # Search files in benchmark library
   for f in cbfset.cbffiles:
     if usingfilters:
-      prob = next(CBFdata(f, keyquery).iterator())
+      prob = next(data.CBFdata.CBFdata(f, keyquery).iterator())
 
     if not cmd or bool(eval(cmd)) == True:
       if hasprintexpr:
@@ -157,10 +156,10 @@ if __name__ == "__main__":
 
   # Load problem and solution files
   if filelist:
-    cbfset = CBFset()
+    cbfset = data.CBFset.CBFset()
     cbfset.readfilelist(args[1:])
   elif setexpr is not None:
-    cbfset = CBFset()
+    cbfset = data.CBFset.CBFset()
     cbfset.read(setexpr)
   else:
     cbfset = defaultcbfset()
