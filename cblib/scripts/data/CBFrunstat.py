@@ -105,7 +105,7 @@ def dualvar_certificates(prob, sol):
   for i in range(prob.bnnz):
     dobj -= prob.bval[i] * var_activities[prob.bsubi[i]]
 
-  if prob.obj == 'MAX':
+  if prob.obj.strip().upper() == 'MAX':
     vardomainfactor = -1
 
   i = 0
@@ -155,6 +155,7 @@ def dualvar_certificates(prob, sol):
 
 
 def primobjstat_continuous(pfeas_obj, pfeas_err, pinfeas_err, dfeas_obj, dfeas_err, dinfeas_err, isminimize):
+
   if all([err == float('inf') for err in [pfeas_err, pinfeas_err, dinfeas_err]]):
     return(('?', ''))
 
@@ -243,7 +244,7 @@ class CBFrunstat:
     dinfeas_err = float('inf')
 
     isminimize = (self.problem.obj.strip().upper() == 'MIN')
- 
+
     if self.solution.primvar:
       cer = primvar_certificates(self.problem, self.solution)
       pfeas_obj = cer[0]

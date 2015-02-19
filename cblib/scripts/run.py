@@ -89,7 +89,7 @@ def run(solver, probfile, solfile, paramfile, printer, callback):
 def benchmark_callback(pack, rs):  
   primobjstat = rs.primobjstatus()
   if primobjstat[1]:
-    primobjstat[1] = '(' + primobjstat[1] + ')'
+    primobjstat = (primobjstat[0], '(' + primobjstat[1] + ')')
   sys.stdout.write(';'.join([pack, rs.problem.name, str(rs.id), ''.join(primobjstat), '{0:.4E}'.format(rs.soltime), str(rs.solver.getsizeoftree())]) + '\n')
   
 
