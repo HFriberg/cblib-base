@@ -1,0 +1,18 @@
+--------------------------------------------------
+Maintaining instances in the CBLIB library
+--------------------------------------------------
+1) Add/delete instances under instances/cbf/PACKNAME.
+
+2) Update instances/ref.bib, if necessary.
+
+3) Update instances/ref.csv, optionally using this output to get started:
+python scripts/filter.py "" -s instances/cbf/PACKNAME
+
+4) Autogenerate comments in the added files:
+python scripts/admin/update-autogen-tags.py -s instances/cbf/PACKNAME.
+
+5) Generated content for the website with:
+python ../../../base/cblib/scripts/admin/print-bibtable.py > ref.bib.html
+python scripts/admin/print-reftable.py --filter="||int||" > ref.csv.mip.html
+python scripts/admin/print-reftable.py --filter="not ||int||" > ref.csv.cont.html 
+python scripts/admin/pack.py -s instances/cbf/PACKNAME.
