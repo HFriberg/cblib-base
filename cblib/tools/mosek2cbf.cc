@@ -47,6 +47,7 @@ int main (int argc, char *argv[])
   const char *ifile;
   const char *opath;
   const char *pfix;
+  bool verbose;
   int i;
 
   // For debugging crashes
@@ -67,6 +68,7 @@ int main (int argc, char *argv[])
   transform = default_transform = &transform_none;
   opath = NULL;
   pfix  = NULL;
+  verbose = false;
 
   // User defined options
   res = getoptions(argc, argv, plugs_frontend, plugs_backend, plugs_transform,
@@ -74,7 +76,8 @@ int main (int argc, char *argv[])
                    &backend,
                    &transform,
                    &opath,
-                   &pfix);
+                   &pfix,
+                   &verbose);
 
   if (argc <= 1 || res != CBF_RES_OK)
   {
@@ -91,7 +94,7 @@ int main (int argc, char *argv[])
         ifile = argv[i];
         ofile = swapfiledirandext(ifile, opath, pfix, backend->format);
 
-        res = processfile(frontend, backend, transform, ifile, ofile.c_str());
+        res = processfile(frontend, backend, transform, ifile, ofile.c_str(), verbose);
       }
     }
   }

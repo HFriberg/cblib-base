@@ -49,7 +49,8 @@ CBFresponsee getoptions(int argc, char *argv[],
     const CBFbackend   **backend,
     const CBFtransform **transform,
     const char         **opath,
-    const char         **pfix);
+    const char         **pfix,
+    bool                *verbose);
 
 const std::string swapfiledirandext(
     const char *ifile,
@@ -62,6 +63,7 @@ CBFresponsee processfile(
     const CBFbackend   *backend,
     const CBFtransform *transform,
     const char *ifile,
-    const char *ofile);
+    const char *ofile,
+    const bool verbose);
 
 #endif

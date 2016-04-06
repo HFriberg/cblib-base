@@ -77,12 +77,13 @@ void printoptions(const CBFfrontend **plugs_frontend, const CBFbackend **plugs_b
 
   printf("  -opath path : Output destination.\n");
   printf("  -pfix name  : Postfix for output files.\n");
+  printf("  -v          : Verbose.\n");
 
   printf("\n\n");
 }
 
 CBFresponsee getoptions(int argc, char *argv[], const CBFfrontend **plugs_frontend, const CBFbackend **plugs_backend, const CBFtransform **plugs_transform,
-    const CBFfrontend **frontend, const CBFbackend **backend, const CBFtransform **transform, const char **opath, const char **pfix) {
+    const CBFfrontend **frontend, const CBFbackend **backend, const CBFtransform **transform, const char **opath, const char **pfix, bool *verbose) {
   CBFresponsee res = CBF_RES_OK;
   char const *frontend_name = "";
   char const *backend_name = "";
@@ -143,6 +144,11 @@ CBFresponsee getoptions(int argc, char *argv[], const CBFfrontend **plugs_fronte
         } else {
           res = CBF_RES_ERR;
         }
+      }
+
+      else if (strcmp(argv[i], "-v") == 0) {
+        *verbose = true;
+        argv[i] = NULL;
       }
     }
   }
@@ -215,13 +221,16 @@ const std::string swapfiledirandext(const char *ifile, const char *newpath, cons
   return ofilestr;
 }
 
-CBFresponsee processfile(const CBFfrontend *frontend, const CBFbackend *backend, const CBFtransform *transform, const char *ifile, const char *ofile) {
+CBFresponsee processfile(const CBFfrontend *frontend, const CBFbackend *backend, const CBFtransform *transform, const char *ifile, const char *ofile, bool verbose) {
   CBFresponsee res = CBF_RES_OK;
   CBFfrontendmemory mem = { 0, };
   CBFtransform_param param;
   CBFdata data = { 0, };
 
   // Read file
+  if (verbose) {
+    printf("Reading %s\n", ifile);
+  }
   res = frontend->read(ifile, &data, &mem);
 
   if (res != CBF_RES_OK) {
@@ -239,6 +248,9 @@ CBFresponsee processfile(const CBFfrontend *frontend, const CBFbackend *backend,
 
     } else {
       // Write file
+      if (verbose) {
+        printf("Writing %s\n", ofile);
+      }
       res = backend->write(ofile, data);
 
       if (res != CBF_RES_OK)

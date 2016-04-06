@@ -142,7 +142,7 @@ static CBFresponsee read(const char *file, CBFdata *data, CBFfrontendmemory *mem
         res2 = MSK_readdata(task, file);
 
       if ( res2==MSK_RES_OK ) {
-        printf("<<<< Recovered using old MPS format definition.\n");
+        printf("<<<< Continued using old MPS format definition.\n");
         res = MSK_RES_OK;
       }
     }
@@ -155,8 +155,9 @@ static CBFresponsee read(const char *file, CBFdata *data, CBFfrontendmemory *mem
   {
     if (ptype==MSK_PROBTYPE_QO || ptype==MSK_PROBTYPE_QCQO)
     {
-      printf("*** Experimental use of MSK_toconic ***\n");
+      printf("*** Converting from quadratic to conic form using MSK_toconic ... ");
       res = MSK_toconic(task);
+      printf("DONE.\n");
     }
   }
 
