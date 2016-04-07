@@ -154,13 +154,20 @@ class htmltable:
     self.oddrow = not self.oddrow
     
     out = ''
+
     if self.pack != pack:
       out += '<td><a href="download/' + str(pack) + '.tar.gz">' + str(pack) + '</a></td>'
       self.pack = pack
     else:
       out += '<td>...' + str(pack) + '</td>'
+
     out += '<td><div style="width:320px;">' + text + '</div></td>'
-    out += '<td>' + ', '.join(['<a href="ref.bib.html#' + r + '">' + r + '</a>' for r in refkeys.replace(" ","").split(',')]) + '</td>'
+
+    if refkeys:
+      out += '<td>' + ', '.join(['<a href="ref.bib.html#' + r + '">' + r + '</a>' for r in refkeys.replace(" ","").split(',')]) + '</td>'
+    else:
+      out += '<td>None</td>'
+
     out += '<td>' + contributor + '</td>'
     out += '<td><div style="max-height:120px; overflow:auto"><span style="white-space: nowrap;">' + '</span>, <span style="white-space: nowrap;">'.join(instances) + '</span></div></td>'
       
