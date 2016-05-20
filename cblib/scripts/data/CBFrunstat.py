@@ -24,7 +24,7 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import os, sys, inspect
-from scipy import sparse
+from scipy import sparse, array, dot
 from data.CBFdata import CBFdata
 
 def getdistdict():

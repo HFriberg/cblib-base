@@ -41,8 +41,7 @@ class solver:
       self.task.set_Stream(mosek.streamtype.log, self.printer)
 
     if paramfile:
-      self.task.putparam("MSK_SPAR_PARAM_READ_FILE_NAME", paramfile)
-      self.task.readparamfile()
+      self.task.readparamfile(paramfile)
 
     if self.cbfsupport:
       self.task.readdata(file)
