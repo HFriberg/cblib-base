@@ -23,37 +23,45 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef CBF_CPF_FORMAT_H
-#define CBF_CPF_FORMAT_H
-
-#include "cbf-data.h"
+#include "frontend-cbf.h"
 #include "programmingstyle.h"
 
-CBFresponsee CBF_conetostr(CBFscalarconee cone, const char **str);
-CBFresponsee CBF_strtocone(const char *str, CBFscalarconee *cone);
-CBFresponsee CBF_objsensetostr(CBFobjsensee cone, const char **str);
-CBFresponsee CBF_strtoobjsense(const char *str, CBFobjsensee *cone);
+#include <string>
+#include <stdio.h>
 
-// Use CBF_NAME_FORMAT instead of %s when parsing lines,
-// to avoid buffer overflow.
-#define MACRO_STR_EXPAND(tok) #tok
-#define MACRO_STR(tok) MACRO_STR_EXPAND(tok)
-#define CBF_NAME_FORMAT "%" MACRO_STR(CBF_MAX_NAME) "s"
 
-extern char CBF_LINE_BUFFER[CBF_MAX_LINE];
-extern char CBF_NAME_BUFFER[CBF_MAX_NAME];
+// -------------------------------------
+// Function definitions
+// -------------------------------------
 
-extern const char * CBF_CONENAM_FREE;
-extern const char * CBF_CONENAM_ZERO;
-extern const char * CBF_CONENAM_POS;
-extern const char * CBF_CONENAM_NEG;
-extern const char * CBF_CONENAM_QUAD;
-extern const char * CBF_CONENAM_RQUAD;
-extern const char * CBF_CONENAM_PEXP;
-extern const char * CBF_CONENAM_DEXP;
+int main (int argc, char *argv[])
+{
+    CBFresponsee res = CBF_RES_OK;
+    CBFfrontendmemory mem = { 0, };
+    CBFdata data = { 0, };
 
-extern const char * CBF_OBJSENSENAM_MIN;
-extern const char * CBF_OBJSENSENAM_MAX;
+    if (argc <= 1)
+    {
+        printf("\nBad command, syntax is:\n");
+        printf(">> minimalreader ifile.cbf\n\n");
+    }
+    else
+    {
+        const char * ifile = argv[1];
 
-#endif
+        res = frontend_cbf.read(ifile, &data, &mem);
 
+        if (res != CBF_RES_OK) {
+            printf("Failed to read file: %s\n", ifile);
+        }
+        else
+        {
+            printf("CON: %lli, VAR: %lli, PSDCON: %i, PSDVAR: %i\n", data.mapnum, data.varnum, data.psdmapnum, data.psdvarnum);
+        }
+
+        // Clean data structure
+        frontend_cbf.clean(&data, &mem);
+    }
+
+    return 0;
+}

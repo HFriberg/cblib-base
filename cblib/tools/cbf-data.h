@@ -42,14 +42,16 @@ typedef enum CBFobjsense_enum {
 
 typedef enum CBFscalarcone_enum {
   CBF_CONE_BEGIN = 0,
-  CBF_CONE_END = 6,
+  CBF_CONE_END = 8,
 
   CBF_CONE_FREE = 0,
   CBF_CONE_POS = 1,
   CBF_CONE_NEG = 2,
   CBF_CONE_ZERO = 3,
   CBF_CONE_QUAD = 4,
-  CBF_CONE_RQUAD = 5
+  CBF_CONE_RQUAD = 5,
+  CBF_CONE_PEXP = 6,
+  CBF_CONE_DEXP = 7
 } CBFscalarconee;
 
 

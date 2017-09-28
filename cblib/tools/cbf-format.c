@@ -42,6 +42,8 @@ const char * CBF_CONENAM_POS = "L+";
 const char * CBF_CONENAM_NEG = "L-";
 const char * CBF_CONENAM_QUAD = "Q";
 const char * CBF_CONENAM_RQUAD = "QR";
+const char * CBF_CONENAM_PEXP = "EXP";
+const char * CBF_CONENAM_DEXP = "EXP*";
 
 // Names of the objective senses
 const char * CBF_OBJSENSENAM_MIN = "MIN";
@@ -71,6 +73,10 @@ CBFresponsee CBF_conetostr(CBFscalarconee cone, const char **str)
     break;
   case CBF_CONE_RQUAD:
     *str = CBF_CONENAM_RQUAD;
+  case CBF_CONE_PEXP:
+    *str = CBF_CONENAM_PEXP;
+  case CBF_CONE_DEXP:
+    *str = CBF_CONENAM_DEXP;
     break;
   default:
     return CBF_RES_ERR;
@@ -92,6 +98,10 @@ CBFresponsee CBF_strtocone(const char *str, CBFscalarconee *cone)
     *cone = CBF_CONE_QUAD;
   else if (strcmp(str, CBF_CONENAM_RQUAD) == 0)
     *cone = CBF_CONE_RQUAD;
+  else if (strcmp(str, CBF_CONENAM_PEXP) == 0)
+    *cone = CBF_CONE_PEXP;
+  else if (strcmp(str, CBF_CONENAM_DEXP) == 0)
+    *cone = CBF_CONE_DEXP;
   else
     return CBF_RES_ERR;
 
