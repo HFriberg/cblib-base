@@ -26,7 +26,7 @@
 #ifndef CBF_CBF_DATA_H
 #define CBF_CBF_DATA_H
 
-#define CBF_VERSION     1
+#define CBF_VERSION     2
 #define CBF_MAX_LINE  512       // Last 3 chars reserved for '\r\n\0'
 #define CBF_MAX_NAME  512
 

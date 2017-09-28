@@ -327,7 +327,7 @@ static CBFresponsee readVER(CBFFILE *pFile, long long int *linecount, CBFdata *d
       res = CBF_RES_ERR;
 
   if (res == CBF_RES_OK) {
-    if (data->ver != CBF_VERSION) {
+    if (data->ver > CBF_VERSION) {
       printf("The version of the file format is not support.\n");
       res = CBF_RES_ERR;
     }
