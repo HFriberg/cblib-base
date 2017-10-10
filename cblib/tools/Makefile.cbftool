@@ -17,10 +17,10 @@
 # 3. This notice may not be removed or altered from any source distribution.
 
 CC=g++
-CCOPT=-g -m64 -std=c++98 -Wall -Wextra -pedantic -Wno-long-long -Wno-format -Wno-missing-field-initializers -Wno-unused-parameter
+CCOPT=-g -Wall -Wextra -pedantic -Wno-long-long -Wno-format -Wno-missing-field-initializers -Wno-unused-parameter
 
 LD=g++
-LDOPT=-g -m64 -std=c++98 -Wall -Wextra -pedantic
+LDOPT=-g -m64
 
 INCPATHS=-I.
 LIBPATHS=
@@ -39,12 +39,11 @@ OBJECTS = cbftool.o \
           transform-none.o \
           transform-dual.o
 
-ifeq ($(ZLIB),true)
-	CCOPT+=-DZLIB_SUPPORT
-	INCPATHS+=-I./zlib
-	LIBPATHS+=-L./zlib
-	LIBS+=-lz
-        OBJECTS+=frontend-cbf-gz.o
+ifdef ZLIBHOME
+    CCOPT+=-DZLIB_SUPPORT
+    INCPATHS+=-I$(ZLIBHOME)/include
+    LIBPATHS+=-L$(ZLIBHOME)/lib
+    LIBS+=-lz
 endif
 
 
@@ -53,46 +52,43 @@ endif
 # TARGETS:
 #############
 cbftool: $(OBJECTS)
-	$(LD) $(LIBPATHS) $(LIBS) $(LDOPT) -o cbftool $(OBJECTS)
+	$(LD)    $(LIBPATHS) $(LDOPT) -o cbftool $(OBJECTS) $(LIBS)
 
 cbftool.o: cbftool.cc
-	$(CC) -c $(INCPATHS)      $(CCOPT) -o cbftool.o cbftool.cc
+	$(CC) -c $(INCPATHS) $(CCOPT) -o cbftool.o cbftool.cc
 
 console.o: console.cc
-	$(CC) -c $(INCPATHS)      $(CCOPT) -o console.o console.cc
+	$(CC) -c $(INCPATHS) $(CCOPT) -o console.o console.cc
 
 cbf-format.o: cbf-format.c
-	$(CC) -c $(INCPATHS)      $(CCOPT) -o cbf-format.o cbf-format.c
+	$(CC) -c $(INCPATHS) $(CCOPT) -o cbf-format.o cbf-format.c
 
 cbf-helper.o: cbf-helper.c
-	$(CC) -c $(INCPATHS)      $(CCOPT) -o cbf-helper.o cbf-helper.c
+	$(CC) -c $(INCPATHS) $(CCOPT) -o cbf-helper.o cbf-helper.c
 
 frontend-cbf.o: frontend-cbf.c
-	$(CC) -c $(INCPATHS)      $(CCOPT) -o frontend-cbf.o frontend-cbf.c
-
-frontend-cbf-gz.o: frontend-cbf-gz.c
-	$(CC) -c $(INCPATHS)      $(CCOPT) -o frontend-cbf-gz.o frontend-cbf-gz.c
+	$(CC) -c $(INCPATHS) $(CCOPT) -o frontend-cbf.o frontend-cbf.c
 
 backend-cbf.o: backend-cbf.c
-	$(CC) -c $(INCPATHS)      $(CCOPT) -o backend-cbf.o backend-cbf.c
+	$(CC) -c $(INCPATHS) $(CCOPT) -o backend-cbf.o backend-cbf.c
 
 backend-mps.o: backend-mps.c
-	$(CC) -c $(INCPATHS)      $(CCOPT) -o backend-mps.o backend-mps.c
+	$(CC) -c $(INCPATHS) $(CCOPT) -o backend-mps.o backend-mps.c
 
 backend-mps-mosek.o: backend-mps-mosek.c
-	$(CC) -c $(INCPATHS)      $(CCOPT) -o backend-mps-mosek.o backend-mps-mosek.c
+	$(CC) -c $(INCPATHS) $(CCOPT) -o backend-mps-mosek.o backend-mps-mosek.c
 
 backend-mps-cplex.o: backend-mps-cplex.c
-	$(CC) -c $(INCPATHS)      $(CCOPT) -o backend-mps-cplex.o backend-mps-cplex.c
+	$(CC) -c $(INCPATHS) $(CCOPT) -o backend-mps-cplex.o backend-mps-cplex.c
 
 backend-sdpa.o: backend-sdpa.c
-	$(CC) -c $(INCPATHS)      $(CCOPT) -o backend-sdpa.o backend-sdpa.c
+	$(CC) -c $(INCPATHS) $(CCOPT) -o backend-sdpa.o backend-sdpa.c
 
 transform-none.o: transform-none.c
-	$(CC) -c $(INCPATHS)      $(CCOPT) -o transform-none.o transform-none.c
+	$(CC) -c $(INCPATHS) $(CCOPT) -o transform-none.o transform-none.c
 
 transform-dual.o: transform-dual.cc
-	$(CC) -c $(INCPATHS)      $(CCOPT) -o transform-dual.o transform-dual.cc
+	$(CC) -c $(INCPATHS) $(CCOPT) -o transform-dual.o transform-dual.cc
 
 
 #############

@@ -19,15 +19,14 @@
 #include "frontend-cbf.h"
 #include "programmingstyle.h"
 
-#include <string>
 #include <stdio.h>
-
+#include <string.h>
 
 // -------------------------------------
 // Function definitions
 // -------------------------------------
 
-int main (int argc, char *argv[])
+int main(int argc, char **argv)
 {
     CBFresponsee res = CBF_RES_OK;
     CBFfrontendmemory mem = { 0, };

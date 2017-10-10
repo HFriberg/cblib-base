@@ -23,9 +23,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifndef CBF_FRONTEND_CBF_GZ_H
+#ifndef ZLIB_SUPPORT
 typedef FILE CBFFILE;
-
 #else
 #include <zlib.h>
 typedef gzFile_s CBFFILE;
@@ -92,18 +91,8 @@ static CBFresponsee
 // Global variable
 // -------------------------------------
 
-#ifdef CBF_FRONTEND_CBF_GZ_H
-CBFfrontend const frontend_cbf_gz = { "cbf.gz", read, clean };
-#else
 CBFfrontend const frontend_cbf = { "cbf", read, clean };
-#endif
 
-// Automatically upgrade from frontend_cbf to frontend_cbf_gz when file ends with .gz
-#ifndef CBF_FRONTEND_CBF_GZ_H
-#ifdef ZLIB_SUPPORT
-extern CBFfrontend const frontend_cbf_gz;
-#endif
-#endif
 
 // -------------------------------------
 // Function definitions
@@ -113,16 +102,6 @@ static CBFresponsee read(const char *file, CBFdata *data, CBFfrontendmemory *mem
   CBFresponsee res = CBF_RES_OK;
   long long int linecount = 0;
   CBFFILE *pFile = NULL;
-
-// Automatically upgrade from frontend_cbf to frontend_cbf_gz when file ends with .gz
-#ifndef CBF_FRONTEND_CBF_GZ_H
-#ifdef ZLIB_SUPPORT
-  size_t flen = strlen(file);
-  if ((flen >= 3) && (strcmp(file+flen-3, ".gz") == 0)) {
-    return frontend_cbf_gz.read(file, data, mem);
-  }
-#endif
-#endif
 
   pFile = fopen(file, "rt");
   if (!pFile) {

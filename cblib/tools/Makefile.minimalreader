@@ -17,10 +17,10 @@
 # 3. This notice may not be removed or altered from any source distribution.
 
 CC=g++
-CCOPT=-g -m64 -std=c++98 -Wall -Wextra -pedantic -Wno-long-long -Wno-format -Wno-missing-field-initializers -Wno-unused-parameter
+CCOPT=-Wall -Wextra -pedantic -Wno-long-long -Wno-format -Wno-missing-field-initializers -Wno-unused-parameter
 
 LD=g++
-LDOPT=-g -m64 -std=c++98 -Wall -Wextra -pedantic
+LDOPT=-lc
 
 INCPATHS=-I.
 LIBPATHS=
@@ -30,12 +30,11 @@ OBJECTS = minimal.o \
           cbf-format.o \
           frontend-cbf.o
 
-ifeq ($(ZLIB),true)
+ifdef ZLIBHOME
 	CCOPT+=-DZLIB_SUPPORT
-	INCPATHS+=-I./zlib
-	LIBPATHS+=-L./zlib
+	INCPATHS+=-I$(ZLIBHOME)/include
+	LIBPATHS+=-L$(ZLIBHOME)/lib
 	LIBS+=-lz
-        OBJECTS+=frontend-cbf-gz.o
 endif
 
 
@@ -44,19 +43,17 @@ endif
 # TARGETS:
 #############
 minimal: $(OBJECTS)
-	$(LD) $(LIBPATHS) $(LIBS) $(LDOPT) -o minimalreader $(OBJECTS)
+	$(LD)    $(LIBPATHS) $(LDOPT) -o minimalreader $(OBJECTS) $(LIBS)
 
 minimal.o: minimal.c
-	$(CC) -c $(INCPATHS)      $(CCOPT) -o minimal.o minimal.c
+	$(CC) -c $(INCPATHS) $(CCOPT) -o minimal.o minimal.c
 
 cbf-format.o: cbf-format.c
-	$(CC) -c $(INCPATHS)      $(CCOPT) -o cbf-format.o cbf-format.c
+	$(CC) -c $(INCPATHS) $(CCOPT) -o cbf-format.o cbf-format.c
 
 frontend-cbf.o: frontend-cbf.c
-	$(CC) -c $(INCPATHS)      $(CCOPT) -o frontend-cbf.o frontend-cbf.c
+	$(CC) -c $(INCPATHS) $(CCOPT) -o frontend-cbf.o frontend-cbf.c
 
-frontend-cbf-gz.o: frontend-cbf-gz.c
-	$(CC) -c $(INCPATHS)      $(CCOPT) -o frontend-cbf-gz.o frontend-cbf-gz.c
 
 #############
 # PHONY:

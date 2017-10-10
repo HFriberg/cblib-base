@@ -21,10 +21,10 @@ ifndef MOSEKHOME
 endif
 
 CC=g++
-CCOPT=-g -m64 -std=c++98 -Wall -Wextra -pedantic -Wno-long-long -Wno-format -Wno-missing-field-initializers -Wno-unused-parameter
+CCOPT=-g -Wall -Wextra -pedantic -Wno-long-long -Wno-format -Wno-missing-field-initializers -Wno-unused-parameter
 
 LD=g++
-LDOPT=-g -m64 -std=c++98 -Wall -Wextra -pedantic -pthread -Wl,-rpath -Wl,${MOSEKHOME}/bin
+LDOPT=-g -Wall -Wextra -pedantic -pthread -Wl,-rpath -Wl,${MOSEKHOME}/bin
 
 INCPATHS=-I. -I${MOSEKHOME}/h
 LIBPATHS=-L${MOSEKHOME}/bin
@@ -43,28 +43,28 @@ OBJECTS = mosek2cbf.o \
 # TARGETS:
 #############
 mosek2cbf: $(OBJECTS)
-	$(LD) $(LDOPT) -o mosek2cbf $(OBJECTS) $(LIBPATHS) $(LIBS)
+	$(LD)    $(LIBPATHS) $(LDOPT) -o mosek2cbf $(OBJECTS) $(LIBS)
 
 mosek2cbf.o: mosek2cbf.cc
-	$(CC) -c $(INCPATHS)      $(CCOPT) -o mosek2cbf.o mosek2cbf.cc
+	$(CC) -c $(INCPATHS) $(CCOPT) -o mosek2cbf.o mosek2cbf.cc
 
 console.o: console.cc
-	$(CC) -c $(INCPATHS)      $(CCOPT) -o console.o console.cc
+	$(CC) -c $(INCPATHS) $(CCOPT) -o console.o console.cc
 
 cbf-format.o: cbf-format.c
-	$(CC) -c $(INCPATHS)      $(CCOPT) -o cbf-format.o cbf-format.c
+	$(CC) -c $(INCPATHS) $(CCOPT) -o cbf-format.o cbf-format.c
 
 cbf-helper.o: cbf-helper.c
-	$(CC) -c $(INCPATHS)      $(CCOPT) -o cbf-helper.o cbf-helper.c
+	$(CC) -c $(INCPATHS) $(CCOPT) -o cbf-helper.o cbf-helper.c
 
 frontend-mosek.o: frontend-mosek.c
-	$(CC) -c $(INCPATHS)      $(CCOPT) -o frontend-mosek.o frontend-mosek.c
+	$(CC) -c $(INCPATHS) $(CCOPT) -o frontend-mosek.o frontend-mosek.c
 
 backend-cbf.o: backend-cbf.c
-	$(CC) -c $(INCPATHS)      $(CCOPT) -o backend-cbf.o backend-cbf.c
+	$(CC) -c $(INCPATHS) $(CCOPT) -o backend-cbf.o backend-cbf.c
 
 transform-none.o: transform-none.c
-	$(CC) -c $(INCPATHS)      $(CCOPT) -o transform-none.o transform-none.c
+	$(CC) -c $(INCPATHS) $(CCOPT) -o transform-none.o transform-none.c
 
 
 #############
