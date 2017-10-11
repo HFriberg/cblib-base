@@ -25,19 +25,22 @@
 
 #ifndef ZLIB_SUPPORT
 typedef FILE CBFFILE;
+#define FOPEN(x,y) fopen(x,y)
+#define FCLOSE(x) fclose(x)
+#define FGETS(x,y,z) fgets(z,x,y)
 #else
 #include <zlib.h>
-typedef gzFile_s CBFFILE;
-#define fopen(x,y) gzopen(x,y)
-#define fclose(x) gzclose(x)
-#define fgets(x,y,z) gzgets(z,x,y)
+typedef struct gzFile_s CBFFILE;
+#define FOPEN(x,y) gzopen(x,y)
+#define FCLOSE(x) gzclose(x)
+#define FGETS(x,y,z) gzgets(z,x,y)
 #endif
 
 static CBFresponsee
-  read(const char *file, CBFdata *data, CBFfrontendmemory *mem);
+  CBF_read(const char *file, CBFdata *data, CBFfrontendmemory *mem);
 
 static void
-  clean(CBFdata *data, CBFfrontendmemory *mem);
+  CBF_clean(CBFdata *data, CBFfrontendmemory *mem);
 
 static CBFresponsee
   CBF_fgets(CBFFILE *pFile, long long int *linecount);
@@ -91,19 +94,19 @@ static CBFresponsee
 // Global variable
 // -------------------------------------
 
-CBFfrontend const frontend_cbf = { "cbf", read, clean };
+CBFfrontend const frontend_cbf = { "cbf", CBF_read, CBF_clean };
 
 
 // -------------------------------------
 // Function definitions
 // -------------------------------------
 
-static CBFresponsee read(const char *file, CBFdata *data, CBFfrontendmemory *mem) {
+static CBFresponsee CBF_read(const char *file, CBFdata *data, CBFfrontendmemory *mem) {
   CBFresponsee res = CBF_RES_OK;
   long long int linecount = 0;
   CBFFILE *pFile = NULL;
 
-  pFile = fopen(file, "rt");
+  pFile = FOPEN(file, "rt");
   if (!pFile) {
     return CBF_RES_ERR;
   }
@@ -198,14 +201,14 @@ static CBFresponsee read(const char *file, CBFdata *data, CBFfrontendmemory *mem
 
   if (res != CBF_RES_OK) {
     printf("Failed to parse line: %lli\n", linecount);
-    clean(data, mem);
+    CBF_clean(data, mem);
   }
 
-  fclose(pFile);
+  FCLOSE(pFile);
   return res;
 }
 
-static void clean(CBFdata *data, CBFfrontendmemory *mem) {
+static void CBF_clean(CBFdata *data, CBFfrontendmemory *mem) {
   if (data->mapstacknum >= 1) {
     free(data->mapstackdim);
     free(data->mapstackdomain);
@@ -278,7 +281,7 @@ static void clean(CBFdata *data, CBFfrontendmemory *mem) {
 static CBFresponsee CBF_fgets(CBFFILE *pFile, long long int *linecount)
 {
   // Find first non-commentary line
-  while( fgets(CBF_LINE_BUFFER, sizeof(CBF_LINE_BUFFER), pFile) != NULL ) {
+  while( FGETS(CBF_LINE_BUFFER, sizeof(CBF_LINE_BUFFER), pFile) != NULL ) {
     ++(*linecount);
 
     if (CBF_LINE_BUFFER[0] != '#')

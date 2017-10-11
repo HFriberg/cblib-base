@@ -16,10 +16,10 @@
 #    misrepresented as being the original software.
 # 3. This notice may not be removed or altered from any source distribution.
 
-CC=g++
+CC=cc
 CCOPT=-Wall -Wextra -pedantic -Wno-long-long -Wno-format -Wno-missing-field-initializers -Wno-unused-parameter
 
-LD=g++
+LD=cc
 LDOPT=-lc
 
 INCPATHS=-I.
