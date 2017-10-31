@@ -27,7 +27,7 @@
 typedef FILE CBFFILE;
 #define FOPEN(x,y) fopen(x,y)
 #define FCLOSE(x) fclose(x)
-#define FGETS(x,y,z) fgets(z,x,y)
+#define FGETS(x,y,z) fgets(x,y,z)
 #else
 #include <zlib.h>
 typedef struct gzFile_s CBFFILE;
