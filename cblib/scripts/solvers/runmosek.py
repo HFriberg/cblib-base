@@ -16,7 +16,7 @@
 #    misrepresented as being the original software.
 # 3. This notice may not be removed or altered from any source distribution.
 
-
+import numpy as np
 import mosek
 from data.CBFsolution import CBFsolution
 
@@ -56,10 +56,10 @@ class solver:
 
     prosta = ''
     solsta = ''
-    xx  = mosek.array.zeros(varnum, float)
-    slx = mosek.array.zeros(mapnum, float)
-    sux = mosek.array.zeros(mapnum, float)
-    snx = mosek.array.zeros(mapnum, float)
+    xx  = np.zeros(varnum, float)
+    slx = np.zeros(mapnum, float)
+    sux = np.zeros(mapnum, float)
+    snx = np.zeros(mapnum, float)
 
     # Get solution from MOSEK
     if intvarnum >= 1 and self.task.solutiondef(mosek.soltype.itg):
